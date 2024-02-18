@@ -6,7 +6,8 @@ import './App.css'
 import Base from './components/core/base'
 import ErrorPage from './components/core/error404'
 import {
-  Pokemon, Berries, Locations
+  PokemonsList, BerriesList, LocationsList,
+  Pokemons, Berries, Locations,
 } from "./components/pages/mons";
 
 const router = createBrowserRouter([
@@ -16,18 +17,36 @@ const router = createBrowserRouter([
       errorElement: <ErrorPage />,
       children: [
         {
-          path: 'pokemon/',
-          element: <Pokemon />
+          path: "pokemon/",
+          element: <PokemonsList />,
+          children: [
+            {
+              path: ":id/",
+              element: <Pokemons />,
+            },
+          ],
         },
         {
           path: "berries/",
-          element: <Berries />
+          element: <BerriesList />,
+          children: [
+            {
+              path: ":id/",
+              element: <Berries />,
+            },
+          ],
         },
         {
           path: "locations/",
-          element: <Locations />
-        }
-      ]
+          element: <LocationsList />,
+          children: [
+            {
+              path: ":id/",
+              element: <Locations />,
+            },
+          ],
+        },
+      ],
   },
 ])
 
