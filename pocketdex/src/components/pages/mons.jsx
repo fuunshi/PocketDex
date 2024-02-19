@@ -166,25 +166,15 @@ function Pokemons() {
                         </table>
                     </div>
                     <div id="moves">
-                        <table>
-                            {/* <tr>
-                                <th>Move</th>
-                                <th>Move Learned At(Generally)</th>
-                            </tr>
-                            {data.moves.map((move, index) => (
-                                move.version_group_details.map((game, index) => {
-                                    if (game.version_group.name === "emerald") {
-                                        return (
-                                            <tr>
-                                                <td>{(capitalize(move.move.name))}</td>
-                                                <td>{game.level_learned_at}</td>
-                                            </tr>
-                                        )
-                                    }
-                                    return null
-                                })
-                            ))} */}
-                        </table>
+                        <h1>Moves</h1>
+                        <div className='flex flex-wrap justify-evenly'>
+                            {data.moves.map((move, index, array) => (
+                                <span className='px-4'>
+                                    {capitalize(move.move.name)}
+                                </span>
+                            ))}
+                        </div>
+
                     </div>
                 </div>
             )}
