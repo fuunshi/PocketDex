@@ -37,28 +37,42 @@ function capitalize(word) {
     return word.charAt(0).toUpperCase() + word.slice(1)
 }
 
+function List({ data, isLoading, heading }) {
+    return (
+        <div className="flex">
+            <div className="bg-gray-200 h-screen w-1/5 p-4 pt-0 overflow-y-auto">
+                <h1 className="text-2xl font-bold mb-4 pt-4 sticky top-0 bg-gray-200">{heading}</h1>
+                {isLoading ? (
+                    <div>Loading...</div>
+                ) : (
+                    <ul>
+                        {data?.results.map((name, index) => (
+                            <li key={index} className="mb-2">
+                                <Link
+                                    to={`${index + 1}/`}
+                                    className="text-blue-500 hover:underline"
+                                >
+                                    {index + 1}. {capitalize(name.name)}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+            <div className="bg-gray-100 w-4/5 p-4 overflow-y-auto flex-grow h-screen">
+                <Outlet />
+            </div>
+        </div>
+    );
+}
+
+
 function PokemonsList() {
     const { data, isLoading } = FetchData('https://pokeapi.co/api/v2/pokemon/');
     console.log(data);
     return (
         <>
-            <div className="flex">
-                <div className='bg-cyan-400' id="sidebar">
-                    <h1 className='bg-sky-400'>Pokemons</h1>
-                    {isLoading ? <div>Loading...</div> : (
-                        <ul>
-                            {data?.results.map((pokemon, index) => (
-                                <li key={index}>
-                                    <Link to={`${index + 1}/`}>{(capitalize(pokemon.name))}</Link>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
-                <div className="content" id="content">
-                    <Outlet />
-                </div>
-            </div>
+            <List data={data} isLoading={isLoading} heading={'Pokemons'} />
         </>
     );
 }
@@ -68,23 +82,7 @@ function BerriesList() {
     console.log(data);
     return (
         <>
-            <div className="flex">
-                <div id="sidebar">
-                    <h1>Berries</h1>
-                    {isLoading ? <div>Loading...</div> : (
-                        <ul>
-                            {data?.results.map((berry, index) => (
-                                <li key={index}>
-                                    <Link to={`${index + 1}/`}>{berry.name}</Link>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
-                <div className="content" id="content">
-                    <Outlet />
-                </div>
-            </div>
+            <List data={data} isLoading={isLoading} heading={'Berries'} />
         </>
     );
 }
@@ -94,23 +92,7 @@ function LocationsList() {
     console.log(data);
     return (
         <>
-            <div className="flex">
-                <div id="sidebar">
-                    <h1>Locations</h1>
-                    {isLoading ? <div>Loading...</div> : (
-                        <ul>
-                            {data?.results.map((location, index) => (
-                                <li key={index}>
-                                    <Link to={`${index + 1}/`}>{location.name}</Link>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
-                <div id="content" className="content">
-                    <Outlet />
-                </div>
-            </div>
+            <List data={data} isLoading={isLoading} heading={'Locations'} />
         </>
     );
 }
@@ -120,67 +102,76 @@ function Pokemons() {
     const { data, isLoading } = FetchData(`https://pokeapi.co/api/v2/pokemon/${id}`)
     return (
         <>
-            <h1 className='flex justify-center'>Pokemon</h1>
+            <h1 className='text-3xl font-bold mb-8 text-center'>Pokemon</h1>
             {isLoading ? (
                 <div>Loading...</div>
             ) : (
                 <div>
-                    <h1>{data.name.charAt(0).toUpperCase() + data.name.slice(1)}</h1>
-                    <h2>Sprites</h2>
-                    <div className="flex">
-
-                        <img src={data.sprites.front_default} alt="Front_View" />
-                        <img src={data.sprites.back_default} alt="Back_View" />
-                        <img src={data.sprites.front_shiny} alt="Shiny_View" />
-                        <img src={data.sprites.back_shiny} alt="Back_Shiny" />
+                    <h1 className='text-2xl font-bold mb-4'>{data.name.charAt(0).toUpperCase() + data.name.slice(1)}</h1>
+                    <h2 className='text-lg font-semibold mb-2'>Sprites</h2>
+                    <div className="flex justify-around">
+                        <div id="normal" className='flex'>
+                            <img src={data.sprites.front_default} alt="Front_View" className="w-32 h-32 object-contain" />
+                            <img src={data.sprites.back_default} alt="Back_View" className="w-32 h-32 object-contain" />
+                            <img src={data.sprites.front_shiny} alt="Shiny_View" className="w-32 h-32 object-contain" />
+                            <img src={data.sprites.back_shiny} alt="Back_Shiny" className="w-32 h-32 object-contain" />
+                        </div>
+                        <div id="gif">
+                            <img src={data.sprites.other.showdown.front_default} alt="Front_Default_Git" className="w-24 h-24 object-contain" />
+                            <img src={data.sprites.other.showdown.front_shiny} alt="Front_Shiny_Gif" className="w-24 h-24 object-contain" />
+                        </div>
                     </div>
-                    <div className="flex flex-col" id="type">
-                        <h2>Types</h2>
+                    <div className="flex flex-col mb-4" id="type">
+                        <h2 className='text-lg font-semibold mb-2'>Types</h2>
                         <div className="flex">
                             {data.types.map((type, index) => (
-                                <span className='px-4'>{capitalize(type.type.name)}</span>
+                                <span key={index} className='px-4 py-1 bg-gray-300 rounded-lg mr-2 mb-2'>{capitalize(type.type.name)}</span>
                             ))}
                         </div>
                     </div>
-                    <h2>Abilities</h2>
-                    <div className="flex" id="abilities">
+                    <h2 className='text-lg font-semibold mb-2'>Abilities</h2>
+                    <div className="flex flex-wrap mb-4" id="abilities">
                         {data.abilities.map((ability, index) => (
-                            <span className='px-4' key={index}>
-                                <a href={ability.ability.url}>{ability.ability.name}</a>
+                            <span className='px-4 py-1 bg-gray-300 rounded-lg mr-2 mb-2' key={index}>
+                                <a href={ability.ability.url} className='text-blue-500 hover:underline'>{capitalize(ability.ability.name)}</a>
                             </span>
                         ))}
                     </div>
-                    <h2>Stats</h2>
+                    <h2 className='text-lg font-semibold mb-2'>Stats</h2>
                     <div id="stats">
-                        <table>
-                            <tr>
-                                <th>Statname</th>
-                                <th>Base Stat</th>
-                            </tr>
-                            {data.stats.map((stat, index) => (
+                        <table className='border border-gray-300'>
+                            <thead>
                                 <tr>
-                                    <td>{stat.stat.name}</td>
-                                    <td>{stat.base_stat}</td>
+                                    <th className='border border-gray-300'>Stat Name</th>
+                                    <th className='border border-gray-300'>Base Stat</th>
                                 </tr>
-                            ))}
+                            </thead>
+                            <tbody>
+                                {data.stats.map((stat, index) => (
+                                    <tr key={index}>
+                                        <td className='border border-gray-300'>{capitalize(stat.stat.name)}</td>
+                                        <td className='border border-gray-300'>{stat.base_stat}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
                         </table>
                     </div>
                     <div id="moves">
-                        <h1>Moves</h1>
-                        <div className='flex flex-wrap justify-evenly'>
+                        <h2 className='text-lg font-semibold mb-2'>Moves</h2>
+                        <div className='flex flex-wrap justify-start'>
                             {data.moves.map((move, index, array) => (
-                                <span className='px-4'>
+                                <span className='px-4 py-1 bg-gray-300 rounded-lg mr-2 mb-2' key={index}>
                                     {capitalize(move.move.name)}
                                 </span>
                             ))}
                         </div>
-
                     </div>
                 </div>
             )}
         </>
     )
 }
+
 
 function Berries() {
     return (
