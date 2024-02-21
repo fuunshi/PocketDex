@@ -9,6 +9,7 @@ import {
   PokemonsList, BerriesList, LocationsList,
   Pokemons, Berries, Locations,
 } from "./components/pages/mons";
+import LoadingAnimation from "./components/core/loading";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
         },
       ],
   },
+  {
+    path:"/bruh/check",
+    element: <LoadingAnimation />
+  }
 ])
 
 

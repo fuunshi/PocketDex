@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Outlet, Link, useParams } from "react-router-dom";
+import LoadingAnimation from '../core/loading';
 
 function FetchData(url) {
     const [data, setData] = useState(null);
@@ -43,7 +44,7 @@ function List({ data, isLoading, heading }) {
             <div className="bg-gray-200 h-screen w-1/5 p-4 pt-0 overflow-y-auto">
                 <h1 className="text-2xl font-bold mb-4 pt-4 sticky top-0 bg-gray-200">{heading}</h1>
                 {isLoading ? (
-                    <div>Loading...</div>
+                    <LoadingAnimation />
                 ) : (
                     <ul>
                         {data?.results.map((name, index) => (
@@ -104,7 +105,7 @@ function Pokemons() {
         <>
             <h1 className='text-3xl font-bold mb-8 text-center'>Pokemon</h1>
             {isLoading ? (
-                <div>Loading...</div>
+                <LoadingAnimation />
             ) : (
                 <div>
                     <h1 className='text-2xl font-bold mb-4'>{data.name.charAt(0).toUpperCase() + data.name.slice(1)}</h1>
