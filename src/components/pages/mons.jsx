@@ -175,17 +175,77 @@ function Pokemons() {
 
 
 function Berries() {
+    const { id } = useParams();
+    const { data, isLoading } = FetchData(`https://pokeapi.co/api/v2/berry/${id}`)
     return (
         <>
-            <h1>Berries</h1>
+            <h1 className='text-3xl font-bold mb-8 text-center'>Berry</h1>
+            {isLoading ? (
+                <LoadingAnimation />
+            ) : (
+                <div>
+                    <div className="name text-center ">
+                        {capitalize(data.item.name)}<br></br>
+                        {data.size}
+                    </div>
+                    <div className="firmness">
+                        Firmness: {data.firmness.name}
+                    </div>
+                    <div className='flex flex-col' id="flavors">
+                        <h2 className="text-2xl font-bold mb-4">Flavors:</h2>
+                        {data.flavors.map((flavor, index) => (
+                            <span key={index} className="capitalize mb-2">{flavor.flavor.name}</span>
+                        ))}
+                    </div>
+                </div>
+            )}
+
         </>
     )
 }
 
 function Locations() {
+
+    const { id } = useParams();
+    const { data, isLoading } = FetchData(`https://pokeapi.co/api/v2/location/${id}`)
     return (
         <>
-            <h1>Locations</h1>
+            <h1 className='text-3xl font-bold mb-8 text-center'>Location</h1>
+            {isLoading ? (
+                <LoadingAnimation />
+            ) : (
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <h2 className="font-bold">Region:</h2>
+                        <p>{data.region.name}</p>
+                    </div>
+                    <div>
+                        <h2 className="font-bold">Game Indices:</h2>
+                        <ul>
+                            {data.game_indices.map((game, index) => (
+                                <li key={index}>Game Index: {game.game_index}, Generation: {game.generation.name}</li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div>
+                        <h2 className="font-bold">Names:</h2>
+                        <ul>
+                            {data.names.map((name, index) => (
+                                <li key={index}>{name.name}</li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div>
+                        <h2 className="font-bold">Areas:</h2>
+                        <ul>
+                            {data.areas.map((area, index) => (
+                                <li key={index}>Name: {area.name}</li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            )}
+
         </>
     )
 }
