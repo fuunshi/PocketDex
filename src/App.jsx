@@ -49,10 +49,6 @@ const router = createBrowserRouter([
         },
       ],
   },
-  {
-    path:"/bruh/check",
-    element: <ErrorPage />
-  }
 ])
 
 
