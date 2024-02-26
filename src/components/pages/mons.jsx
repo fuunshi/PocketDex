@@ -39,6 +39,42 @@ function capitalize(word) {
 }
 
 function List({ data, isLoading, heading }) {
+    const listRef = useRef(null);
+
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && data?.next) {
+            fetch(data.next)
+              .then((response) => response.json())
+              .then((nextData) => {
+                setData((prevData) => ({
+                  ...prevData,
+                  results: [...prevData.results, ...nextData.results],
+                  next: nextData.next,
+                  previous: nextData.previous,
+                }));
+              })
+              .catch((error) => console.error('Error fetching next data:', error));
+          }
+        },
+        {
+          root: null,
+          rootMargin: '0px',
+          threshold: 1.0,
+        }
+      );
+  
+      if (listRef.current) {
+        observer.observe(listRef.current);
+      }
+  
+      return () => {
+        if (listRef.current) {
+          observer.unobserve(listRef.current);
+        }
+      };
+    }, [data]);
     return (
         <div className="flex">
             <div className="bg-gray-200 h-screen w-1/5 p-4 pt-0 overflow-y-auto">
