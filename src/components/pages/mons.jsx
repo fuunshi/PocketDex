@@ -31,14 +31,14 @@ function FetchData(url) {
         fetchData();
     }, [url]);
 
-    return { data, isLoading };
+    return { data, isLoading,setData };
 }
 
 function capitalize(word) {
     return word.charAt(0).toUpperCase() + word.slice(1)
 }
 
-function List({ data, isLoading, heading }) {
+function List({ data, isLoading, heading,setData }) {
     const listRef = useRef(null);
 
     useEffect(() => {
@@ -95,6 +95,9 @@ function List({ data, isLoading, heading }) {
                         ))}
                     </ul>
                 )}
+                <div ref={listRef}>
+
+                </div>
             </div>
             <div className="bg-gray-100 w-4/5 p-4 overflow-y-auto flex-grow h-screen">
                 <Outlet />
@@ -105,31 +108,31 @@ function List({ data, isLoading, heading }) {
 
 
 function PokemonsList() {
-    const { data, isLoading } = FetchData('https://pokeapi.co/api/v2/pokemon/');
+    const { data, isLoading,setData } = FetchData('https://pokeapi.co/api/v2/pokemon/');
     console.log(data);
     return (
         <>
-            <List data={data} isLoading={isLoading} heading={'Pokemons'} />
+            <List data={data} isLoading={isLoading} heading={'Pokemons'} setData={setData}/>
         </>
     );
 }
 
 function BerriesList() {
-    const { data, isLoading } = FetchData('https://pokeapi.co/api/v2/berry/');
+    const { data, isLoading,setData } = FetchData('https://pokeapi.co/api/v2/berry/');
     console.log(data);
     return (
         <>
-            <List data={data} isLoading={isLoading} heading={'Berries'} />
+            <List data={data} isLoading={isLoading} heading={'Berries'} setData={setData}/>
         </>
     );
 }
 
 function LocationsList() {
-    const { data, isLoading } = FetchData('https://pokeapi.co/api/v2/location/');
+    const { data, isLoading ,setData} = FetchData('https://pokeapi.co/api/v2/location/');
     console.log(data);
     return (
         <>
-            <List data={data} isLoading={isLoading} heading={'Locations'} />
+            <List data={data} isLoading={isLoading} heading={'Locations'} setData={setData}/>
         </>
     );
 }
