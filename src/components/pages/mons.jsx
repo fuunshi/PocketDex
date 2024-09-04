@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Outlet, Link, useParams } from "react-router-dom";
 import LoadingAnimation from '../core/loading';
+import { FaSearch } from 'react-icons/fa';
 
 function FetchData(url) {
     const [data, setData] = useState(null);
@@ -25,55 +26,84 @@ function FetchData(url) {
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
+                setIsLoading(false);
             }
         };
 
         fetchData();
     }, [url]);
 
-    return { data, isLoading,setData };
+    return { data, isLoading, setData };
+}
+
+function SearchBar() {
+    const [query, setQuery] = useState('');
+
+    const handleChange = (e) => {
+        setQuery(e.target.value);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        
+    }
+    return (
+        <form onSubmit={handleSubmit} className="flex items-center">
+            <FaSearch className="text-gray-500 mr-2" /> {/* Use the FaSearch icon */}
+            <input
+                type="text"
+                value={query}
+                onChange={handleChange}
+                placeholder="Search..."
+                className="border border-gray-300 px-3 py-2 rounded-l-md focus:outline-none"
+            />
+            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-r-md focus:outline-none">
+                Search
+            </button>
+        </form>
+    );
 }
 
 function capitalize(word) {
     return word.charAt(0).toUpperCase() + word.slice(1)
 }
 
-function List({ data, isLoading, heading,setData }) {
+function List({ data, isLoading, heading, setData }) {
     const listRef = useRef(null);
 
     useEffect(() => {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting && data?.next) {
-            fetch(data.next)
-              .then((response) => response.json())
-              .then((nextData) => {
-                setData((prevData) => ({
-                  ...prevData,
-                  results: [...prevData.results, ...nextData.results],
-                  next: nextData.next,
-                  previous: nextData.previous,
-                }));
-              })
-              .catch((error) => console.error('Error fetching next data:', error));
-          }
-        },
-        {
-          root: null,
-          rootMargin: '0px',
-          threshold: 1.0,
-        }
-      );
-  
-      if (listRef.current) {
-        observer.observe(listRef.current);
-      }
-  
-      return () => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && data?.next) {
+                    fetch(data.next)
+                        .then((response) => response.json())
+                        .then((nextData) => {
+                            setData((prevData) => ({
+                                ...prevData,
+                                results: [...prevData.results, ...nextData.results],
+                                next: nextData.next,
+                                previous: nextData.previous,
+                            }));
+                        })
+                        .catch((error) => console.error('Error fetching next data:', error));
+                }
+            },
+            {
+                root: null,
+                rootMargin: '0px',
+                threshold: 1.0,
+            }
+        );
+
         if (listRef.current) {
-          observer.unobserve(listRef.current);
+            observer.observe(listRef.current);
         }
-      };
+
+        return () => {
+            if (listRef.current) {
+                observer.unobserve(listRef.current);
+            }
+        };
     }, [data]);
     return (
         <div className="flex">
@@ -108,31 +138,31 @@ function List({ data, isLoading, heading,setData }) {
 
 
 function PokemonsList() {
-    const { data, isLoading,setData } = FetchData('https://pokeapi.co/api/v2/pokemon/');
+    const { data, isLoading, setData } = FetchData('https://pokeapi.co/api/v2/pokemon/');
     console.log(data);
     return (
         <>
-            <List data={data} isLoading={isLoading} heading={'Pokemons'} setData={setData}/>
+            <List data={data} isLoading={isLoading} heading={'Pokemons'} setData={setData} />
         </>
     );
 }
 
 function BerriesList() {
-    const { data, isLoading,setData } = FetchData('https://pokeapi.co/api/v2/berry/');
+    const { data, isLoading, setData } = FetchData('https://pokeapi.co/api/v2/berry/');
     console.log(data);
     return (
         <>
-            <List data={data} isLoading={isLoading} heading={'Berries'} setData={setData}/>
+            <List data={data} isLoading={isLoading} heading={'Berries'} setData={setData} />
         </>
     );
 }
 
 function LocationsList() {
-    const { data, isLoading ,setData} = FetchData('https://pokeapi.co/api/v2/location/');
+    const { data, isLoading, setData } = FetchData('https://pokeapi.co/api/v2/location/');
     console.log(data);
     return (
         <>
-            <List data={data} isLoading={isLoading} heading={'Locations'} setData={setData}/>
+            <List data={data} isLoading={isLoading} heading={'Locations'} setData={setData} />
         </>
     );
 }
@@ -199,7 +229,7 @@ function Pokemons() {
                     <div id="moves">
                         <h2 className='text-lg font-semibold mb-2'>Moves</h2>
                         <div className='flex flex-wrap justify-start'>
-                            {data.moves.map((move, index, array) => (
+                            {data.moves.map((move, index) => (
                                 <span className='px-4 py-1 bg-gray-300 rounded-lg mr-2 mb-2' key={index}>
                                     {capitalize(move.move.name)}
                                 </span>

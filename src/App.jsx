@@ -20,30 +20,36 @@ const router = createBrowserRouter([
         {
           path: "pokemon/",
           element: <PokemonsList />,
+          errorElement: <ErrorPage />,
           children: [
             {
               path: ":id/",
               element: <Pokemons />,
+              errorElement: <ErrorPage />,
             },
           ],
         },
         {
           path: "berries/",
           element: <BerriesList />,
+          errorElement: <ErrorPage />,
           children: [
             {
               path: ":id/",
               element: <Berries />,
+              errorElement: <ErrorPage />,
             },
           ],
         },
         {
           path: "locations/",
           element: <LocationsList />,
+          errorElement: <ErrorPage />,
           children: [
             {
               path: ":id/",
               element: <Locations />,
+              errorElement: <ErrorPage />,
             },
           ],
         },
